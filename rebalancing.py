@@ -33,24 +33,26 @@ def calculate_distributed_saving_amount():
     savings_amount_remaining = savings_amount
     new_distribution = current_distribution
     while savings_amount_remaining > 0:
-        savings_amount_remaining = calculate_rebalancing_step(savings_amount_remaining, relative_missing, missing_for_full_rebalance, new_distribution)
+        savings_amount_remaining = calculate_rebalancing_step(savings_amount_remaining, relative_missing, missing_for_full_rebalance, current_distribution, new_distribution)
 
 
-def calculate_rebalancing_step(savings_amount_remaining, relative_missing, missing_for_full_rebalance, new_distribution) -> int:
-    min_relative_index = np.argmin(relative_missing)
-    min_relative_indices = np.where(relative_missing == relative_missing[min_relative_index])
-    target_index = np.argmin(relative_missing > relative_missing[min_relative_index])
+def calculate_rebalancing_step(savings_amount_remaining, relative_missing, missing_for_full_rebalance, current_distribution, new_distribution):
 
-    diff_to_next_bigger = relative_missing[min_relative_index] - relative_missing[target_index]
+    first_min_relative_index = np.argmin(relative_missing)
+    min_relative_indices = [i for val, i in relative_missing if val == relative_missing[first_min_relative_index]]  # Indices of holdings that need to be increased to target
+    target_index = np.argmin(relative_missing > relative_missing[first_min_relative_index])
+    percentage_diff_to_next_bigger = relative_missing[first_min_relative_index] - relative_missing[target_index]
 
-    targets_to_reach_next_bigger_rel_missing = missing_for_full_rebalance[min_relative_indices] * (1 - relative_missing[target_index])
+    required_savings_amount = percentage_diff_to_next_bigger * current_distribution[min_relative_indices].sum()
 
-    new_distribution =
+    if required_savings_amount > savings_amount_remaining:
+        max_possible_percentage_raise = relative_missing[target_index] - savings_amount_remaining / current_distribution[min_relative_indices].sum()
+        new_distribution = np.add(current_distribution, )
 
-    savings_amount_remaining
-    necessary_amount = targets_to_reach_next_bigger_rel_missing.sum()
 
-    return savings_amount_remaining
+
+
+    return 0
 
 
 if __name__ == '__main__':
