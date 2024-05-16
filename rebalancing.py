@@ -4,7 +4,7 @@ import numpy as np
 
 wanted_distribution = np.array([60, 25, 5, 5, 5]) / 100  # Wished portfolio distribution in percent.
 current_holdings = np.array([937, 486, 122, 122, 69])  # current total amount of holdings
-savings_amount = 600
+savings_amount = 20
 
 
 def checks():
@@ -15,6 +15,7 @@ def checks():
 
 
 def calculate_distributed_saving_amount():
+    global new_distribution
     total_savings = current_holdings.sum()
     current_distribution = (current_holdings / total_savings)
     relative_imbalances = 1 - (current_distribution / wanted_distribution)
@@ -40,12 +41,23 @@ def calculate_distributed_saving_amount():
         new_holdings, savings_amount_remaining = calculate_rebalancing_step(savings_amount_remaining, target_holdings,
                                                                             relative_missing,
                                                                             missing_for_full_rebalance, new_holdings)
-        print(f'savings amount remaining: ${savings_amount_remaining}')
-        print(f'currently new holdings: ${new_holdings}')
-        print(f'currently new distribution: ${new_distribution}')
+        print(f'savings amount remaining: {savings_amount_remaining}')
+        print(f'currently new holdings: {new_holdings}')
+        print(f'currently new distribution: {new_distribution}')
         if max_iterations < 0:
             sys.exit("CALCULATION INTERRUPTED DUE TO INF LOOP")
         max_iterations -= 1
+    print('\n--------------------------------- done with calculation ---------------------------------------------')
+    print(f'total used savings-amount: {np.sum(np.around(new_holdings)) - np.around(current_holdings).sum()}')
+    print(f'final distribution: {np.around(new_distribution, 2)}')
+    print('\n---------------------------------     amounts to add    ---------------------------------------------')
+    total = 0
+    for i, val in enumerate(new_distribution):
+        amount_to_add = round(new_holdings[i]) - round(current_holdings[i])
+        print(f'Holding {i+1}: Add {amount_to_add}')
+        total += amount_to_add
+    print(f'--------------------------')
+    print(f'in total: {total}')
     return new_holdings
 
 
