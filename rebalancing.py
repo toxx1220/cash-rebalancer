@@ -80,4 +80,3 @@ def calculate_rebalancing_step(savings_amount_remaining, target_holdings, relati
 if __name__ == '__main__':
     checks()
     savings_distributed = calculate_distributed_saving_amount()
-    print(savings_distributed)
