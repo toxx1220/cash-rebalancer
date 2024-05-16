@@ -4,7 +4,7 @@ import numpy as np
 
 wanted_distribution = np.array([60, 25, 5, 5, 5]) / 100  # Wished portfolio distribution in percent.
 current_holdings = np.array([937, 486, 122, 122, 69])  # current total amount of holdings
-savings_amount = 20
+savings_amount = 600
 
 
 def checks():
@@ -84,6 +84,7 @@ def calculate_rebalancing_step(savings_amount_remaining, target_holdings, relati
             amount_to_add = wanted_distribution * savings_amount_remaining
 
     savings_amount_remaining -= round(np.sum(amount_to_add))
+    print(f'used savings amount: {round(np.sum(amount_to_add))}')
 
     new_distribution = np.add(current_holdings, amount_to_add)
     return new_distribution, savings_amount_remaining
